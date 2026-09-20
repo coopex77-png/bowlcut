@@ -1,7 +1,7 @@
 // Edit this and redeploy. Nothing else needs to change.
 window.PEPE_CONFIG = {
-  name: 'bowlcut',              // brand in the top-left  (TODO: final name)
-  ticker: 'BOWL',               // "Buy $BOWL"            (TODO: final ticker)
+  name: 'jeanis',               // brand in the top-left
+  ticker: 'JEANIS',             // "Buy $JEANIS"
   chain: 'solana',              // dexscreener chain id: solana, ethereum, base, bsc ...
   mint: 'CZ3qbW9qwENcoBfv5b4sNcbhvziWu4o2LbNP4BEibCHq',                     // contract address. Empty = placeholder market cap below
   buy: '',                      // custom buy link. Empty = pump.fun/coin/<mint>

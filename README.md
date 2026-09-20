@@ -1,4 +1,4 @@
-# bowlcut (working name — domain TBD)
+# jeanis.fun
 
 A gentleman whose length is the market cap. Live. Static site: `index.html` + `config.js`, no build step.
 
@@ -17,6 +17,6 @@ Edit `config.js`:
 ## Deploy (Hostinger)
 1. hPanel → Websites → Manage → File Manager → `public_html`
 2. Upload `index.html`, `config.js`, `assets/` (delete Hostinger's default index files first)
-3. Point `<domain>` at the hosting (Domains → DNS) and enable SSL (Security → SSL)
+3. Point `jeanis.fun` at the hosting (Domains → DNS) and enable SSL (Security → SSL)
 
 Any static host works the same way (Vercel/Netlify/Cloudflare Pages: drag the folder in).
