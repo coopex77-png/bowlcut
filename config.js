@@ -3,13 +3,13 @@ window.PEPE_CONFIG = {
   name: 'jeanis',               // brand in the top-left
   ticker: 'JEANIS',             // "Buy $JEANIS"
   chain: 'solana',              // dexscreener chain id: solana, ethereum, base, bsc ...
-  mint: 'CZ3qbW9qwENcoBfv5b4sNcbhvziWu4o2LbNP4BEibCHq',                     // contract address. Empty = placeholder market cap below
+  mint: '',                     // contract address. Empty = placeholder market cap below
   buy: '',                      // custom buy link. Empty = pump.fun/coin/<mint>
   placeholderMc: 6000,          // market cap shown while mint is empty
   // On-chain source for launchpad tokens the aggregators haven't indexed yet (Raydium LaunchLab / bonk.fun style pools).
   // pool = the LaunchLab PoolState account, quote = the pool's quote mint (SOL, USD1, PEPE ...). Leave empty to skip.
-  pool: '8S5SLQ5PdBer3Zbh5ysyZF1QC1qgZcjoiibFopH2FG4e',
-  quote: 'PEPEqnuuCDbBC89p1u9vpnP1KQ2oj1xTcQBsjt9X55m',
+  pool: '',
+  quote: '',
   rpc: 'https://solana-rpc.publicnode.com',
   model: '',                    // optional: '/assets/man.glb' to use a real model instead of the built-in one
   modelScale: 1,                // scale for the optional glb
