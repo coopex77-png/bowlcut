@@ -10,6 +10,9 @@ window.PEPE_CONFIG = {
   // pool = the LaunchLab PoolState account, quote = the pool's quote mint (SOL, USD1, PEPE ...). Leave empty to skip.
   pool: '',
   quote: '',
+  // pump.fun: the token's bonding-curve account (setca.py fills it). Read on-chain every 2 s until the curve completes,
+  // then DexScreener takes over. Leave empty to skip.
+  curve: '',
   rpc: 'https://solana-rpc.publicnode.com',
   model: '',                    // optional: '/assets/man.glb' to use a real model instead of the built-in one
   modelScale: 1,                // scale for the optional glb

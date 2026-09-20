@@ -426,7 +426,8 @@ const begin = () => {
 const state = {mc: 0, best: 0, log: []};
 // DexScreener allows 300 req/min on the token endpoints, so 2 s polling is comfortable. GeckoTerminal (~30/min) is only a
 // fallback and is never asked more than once every 10 s. Polling pauses while the tab is hidden and backs off after errors.
-let geckoAt = 0, quoteAt = 0, quoteUsd = 0;
+let geckoAt = 0, quoteAt = 0, quoteUsd = 0, solAt = 0, solUsd = 0;
+const SOL = 'So11111111111111111111111111111111111111112';
 const bestPair = a => Array.isArray(a) && a.length ? a.slice().sort((x, y) => (y.liquidity?.usd || 0) - (x.liquidity?.usd || 0))[0] : null;
 const fetchDex = async () => {
   try {
@@ -449,10 +450,33 @@ const fetchPool = async () => {
     const priceQ = ((vB + rB) / 10 ** decB) / ((vA - rA) / 10 ** decA);
     if (Date.now() - quoteAt > 15000) {                                   // the quote token's dollar price, refreshed every 15 s
       quoteAt = Date.now();
-      try { const q = bestPair(await (await fetch('https://api.dexscreener.com/tokens/v1/' + CHAIN + '/' + CFG.quote)).json()); if (q) quoteUsd = +q.priceUsd || quoteUsd; } catch (e) {}
+      try { const q = bestPair((await (await fetch('https://api.dexscreener.com/tokens/v1/' + CHAIN + '/' + CFG.quote)).json()).filter(p => p.baseToken?.address === CFG.quote)); if (q) quoteUsd = +q.priceUsd || quoteUsd; } catch (e) {}
     }
     if (!(priceQ > 0) || !quoteUsd) return null;
     return {mc: priceQ * supply * quoteUsd, price: priceQ * quoteUsd, vol: null, chg: null, src: 'live'};
+  } catch (e) {}
+  return null;
+};
+// pump.fun bonding curve, read straight from the chain: price = virtualSol / virtualToken. 1 B supply, 6 decimals.
+// Layout: 8 disc, u64 virtualTokenReserves, u64 virtualSolReserves, u64 realTokenReserves, u64 realSolReserves, u64 tokenTotalSupply, u8 complete.
+// Once the curve completes (migration to PumpSwap) this returns null and DexScreener carries on.
+const fetchCurve = async () => {
+  if (!CFG.curve) return null;
+  try {
+    const r = await (await fetch(CFG.rpc || 'https://solana-rpc.publicnode.com', {method: 'POST', headers: {'content-type': 'application/json'},
+      body: JSON.stringify({jsonrpc: '2.0', id: 1, method: 'getAccountInfo', params: [CFG.curve, {encoding: 'base64', commitment: 'processed'}]})})).json();
+    const b64 = r.result?.value?.data?.[0]; if (!b64) return null;
+    const bin = atob(b64), d = new DataView(Uint8Array.from(bin, c => c.charCodeAt(0)).buffer);
+    const u = o => Number(d.getBigUint64(o, true));
+    const vT = u(8), vS = u(16), supply = u(40) / 1e6, complete = d.getUint8(48);
+    if (complete || !(vT > 0)) return null;
+    if (Date.now() - solAt > 15000) {                                     // SOL in dollars, refreshed every 15 s
+      solAt = Date.now();
+      try { const q = bestPair((await (await fetch('https://api.dexscreener.com/tokens/v1/solana/' + SOL)).json()).filter(p => p.baseToken?.address === SOL)); if (q) solUsd = +q.priceUsd || solUsd; } catch (e) {}
+    }
+    if (!solUsd) return null;
+    const priceSol = (vS / 1e9) / (vT / 1e6);
+    return {mc: priceSol * supply * solUsd, price: priceSol * solUsd, vol: null, chg: null, src: 'live'};
   } catch (e) {}
   return null;
 };
@@ -468,8 +492,9 @@ const fetchGecko = async () => {
 };
 // The chain is the freshest source while the token is on its launch curve; DexScreener adds volume / 24h once it has indexed.
 const fetchMarket = async () => {
-  const [dex, pool] = await Promise.all([fetchDex(), fetchPool()]);
-  if (pool) return {...pool, vol: dex?.vol ?? null, chg: dex?.chg ?? null};
+  const [dex, pool, pump] = await Promise.all([fetchDex(), fetchPool(), fetchCurve()]);
+  const onchain = pump || pool;
+  if (onchain) return {...onchain, vol: dex?.vol ?? null, chg: dex?.chg ?? null};
   if (dex) return dex;
   return fetchGecko();
 };

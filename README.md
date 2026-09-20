@@ -4,7 +4,7 @@ A gentleman whose length is the market cap. Live. Static site: `index.html` + `c
 
 ## Configure
 Edit `config.js`:
-- `mint` – contract address (empty = "waiting to launch")
+- `mint` – contract address (empty = placeholder market cap). Set it with `python3 tools/setca.py <MINT> [buy_url]`: pump.fun tokens get their bonding curve (`curve`), LaunchLab tokens their pool (`pool`, `quote`), both read on-chain every 2 s
 - `chain` – dexscreener chain id (`solana`, `ethereum`, `base`, `bsc` …)
 - `name`, `ticker`, `buy` – branding / buy link (default: pump.fun/coin/<mint>)
 - `model` – optional `/assets/man.glb` to swap in a real 3D model
