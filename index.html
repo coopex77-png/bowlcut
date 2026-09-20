@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>BOWLCUT</title>
+<meta name="description" content="A gentleman whose length is the market cap. Live.">
+<meta property="og:title" content="BOWLCUT">
+<meta property="og:url" content="https://bowlcut.online/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BOWLCUT">
+<meta name="twitter:description" content="A gentleman whose length is the market cap. Live.">
+<meta property="og:description" content="A gentleman whose length is the market cap. Live.">
+<meta name="theme-color" content="#0e0b09">
+<meta property="og:image" content="https://bowlcut.online/assets/splash.png">
+<meta name="twitter:image" content="https://bowlcut.online/assets/splash.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A5%A3%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* One gentleman, lit like a product. A bespoke tailor's label: warm cream ink on espresso, a serif for the words and
+   the big figure, a mono for the small numbers, one hairline frame around the whole thing. The measurement is drawn
+   in SVG over the 3D so it reads like a pattern-cutter's chalk line. */
+:root{
+  --bg:#0e0b09; --ink:#f2e9d8; --dim:#a4957f; --faint:#665b4d; --line:#f2e9d81c; --line2:#f2e9d838;
+  --up:#9fdc8a; --down:#e07a7a; --accent:#e6c15a;
+  --serif:"Fraunces","Iowan Old Style",Georgia,serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:var(--serif);-webkit-font-smoothing:antialiased;overflow:hidden}
+body{overscroll-behavior:none}
+button,a{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-decoration:none}
+.hidden{display:none!important}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.lbl{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);opacity:.8}
+
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y}
+#gl:active{cursor:grabbing}
+#vig{position:fixed;inset:0;pointer-events:none;background:radial-gradient(120% 80% at 50% 42%,transparent 40%,rgba(6,4,2,.6) 100%)}
+#grain{position:fixed;inset:0;pointer-events:none;opacity:.045;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* the label's edge: one hairline inset from the viewport, with a tick in each corner */
+#frame{position:fixed;inset:14px;border:1px solid var(--line);pointer-events:none;z-index:4}
+#frame i{position:absolute;width:10px;height:10px;border:1px solid var(--accent);opacity:.7}
+#frame i:nth-child(1){top:-1px;left:-1px;border-width:1px 0 0 1px}#frame i:nth-child(2){top:-1px;right:-1px;border-width:1px 1px 0 0}
+#frame i:nth-child(3){bottom:-1px;left:-1px;border-width:0 0 1px 1px}#frame i:nth-child(4){bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+#rule{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .4s}
+#rule line{stroke:var(--accent);stroke-opacity:.75}
+#rule .drop{stroke:var(--accent);stroke-opacity:.35;stroke-dasharray:1 5}
+#rule text{fill:var(--ink);font-family:var(--serif);font-style:italic;font-size:17px;letter-spacing:.01em}
+
+/* chrome */
+.ui{position:fixed;z-index:5}
+#head{top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:38px 44px;gap:20px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand h1{font-size:40px;font-weight:300;font-style:italic;letter-spacing:-.02em;line-height:1;font-variation-settings:"opsz" 144}
+.brand .dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 12px var(--up);animation:pulse 2.6s ease-in-out infinite;margin-left:4px}
+@keyframes pulse{50%{opacity:.35}}
+.brand small{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);text-transform:uppercase}
+/* tagline under the brand: three short serif lines, the verbs coloured like the ticker */
+.tag{margin-top:22px;display:grid;gap:6px;font-size:21px;font-weight:300;line-height:1.3;color:var(--dim);max-width:460px;padding-left:14px;border-left:1px solid var(--line2)}
+.tag b{font-weight:400;font-style:italic;color:var(--ink)}
+.tag .up{color:var(--up);font-style:italic} .tag .down{color:var(--down);font-style:italic}
+#head .right{text-align:right;display:grid;gap:8px;justify-items:end;padding:14px 18px;border:1px solid var(--line);background:rgba(14,11,9,.4)}
+#head .right .v{font-family:var(--mono);font-size:18px;color:var(--ink)}
+
+/* the number */
+#read{left:44px;bottom:140px;display:grid;gap:10px}
+#read .len{font-size:clamp(64px,9.5vw,132px);font-weight:300;font-style:italic;line-height:.9;letter-spacing:-.035em;font-variation-settings:"opsz" 144}
+#read .sub{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+#read .delta{padding:3px 9px;border:1px solid var(--line);font-size:11px;opacity:0;transition:opacity .5s}
+#read .delta.on{opacity:1}
+
+/* bottom bar: cells separated by hairlines, the buy button a solid block of the accent */
+#bar{left:14px;right:14px;bottom:14px;border-top:1px solid var(--line);background:rgba(14,11,9,.72);backdrop-filter:blur(6px);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto;align-items:stretch}
+#bar .cell{display:grid;gap:7px;min-width:0;padding:18px 24px;border-right:1px solid var(--line);align-content:center}
+#bar .cell b{font-family:var(--mono);font-size:15px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#bar .buy{display:flex;align-items:center;padding:0 40px;background:var(--accent);color:#1a1409;font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;transition:background .25s;white-space:nowrap}
+#bar .buy:hover{background:var(--ink)}
+#bar .ca code{font-family:var(--mono);font-size:12px;color:var(--dim);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#bar .ca code:hover{color:var(--ink)}
+
+/* log */
+#log{right:44px;bottom:140px;width:260px;display:grid;gap:7px;justify-items:end;text-align:right}
+#log .row{font-family:var(--mono);font-size:11px;color:var(--faint);opacity:0;animation:fade .6s ease forwards}
+#log .row b{color:var(--dim);font-weight:400}
+@keyframes fade{to{opacity:1}}
+
+/* first load */
+#boot{position:fixed;inset:0;z-index:20;background:var(--bg);transition:opacity .6s}
+#boot.gone{opacity:0;pointer-events:none}
+
+@media(max-width:820px){
+  #frame{inset:8px}
+  #head{padding:22px 22px;align-items:flex-start}
+  .brand h1{font-size:28px}
+  .tag{margin-top:12px;font-size:14px;gap:3px;padding-left:10px}
+  #head .right{padding:8px 10px;gap:4px}
+  #head .right .v{font-size:13px}
+  #read{left:22px;bottom:224px;gap:5px}
+  #read .len{font-size:54px}
+  #read .sub{font-size:11px}
+  #log{display:none}
+  #bar{left:8px;right:8px;bottom:8px;grid-template-columns:1fr 1fr}
+  #bar .cell{padding:12px 14px;gap:5px}
+  #bar .cell:nth-child(2){border-right:0}
+  #bar .cell b{font-size:13px}
+  #bar .buy{padding:14px 20px;grid-column:1/-1;justify-content:center;border-top:1px solid var(--line)}
+  #bar .ca{grid-column:1/-1;border-right:0;border-top:1px solid var(--line)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ?shot — clean render for images: white studio, no chrome */
+html.shot,html.shot body{background:#fff}
+html.shot .ui,html.shot #vig,html.shot #grain,html.shot #rule,html.shot #boot,html.shot #frame{display:none!important}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script src="config.js"></script>
+</head>
+<body>
+
+<canvas id="gl"></canvas>
+<svg id="rule"></svg>
+<div id="vig"></div><div id="grain"></div>
+<div id="frame"><i></i><i></i><i></i><i></i></div>
+
+<header class="ui" id="head">
+  <div>
+    <div class="brand"><h1 data-name>bowlcut</h1><span class="dot"></span><small data-src>live</small></div>
+    <div class="tag">
+      <span>his dick is the market cap, <b>live.</b></span>
+      <span>buy = <span class="up">grows.</span></span>
+      <span>sell = <span class="down">shrinks.</span></span>
+    </div>
+  </div>
+  <div class="right"><span class="lbl">Market cap</span><span class="v" data-mc>—</span></div>
+</header>
+
+<div class="ui" id="read">
+  <span class="lbl">Length</span>
+  <div class="len"><span data-len>0.0 cm</span></div>
+  <div class="sub"><span data-inch class="mono">0.0 in</span></div>
+  <div class="sub"><span data-note>measuring</span><span class="delta" data-delta></span></div>
+</div>
+
+<div class="ui" id="log"></div>
+
+<footer class="ui" id="bar">
+  <div class="cell"><span class="lbl">Price</span><b data-price>updating now</b></div>
+  <div class="cell ca"><div style="display:grid;gap:6px;min-width:0"><span class="lbl">Contract</span><code data-ca title="Copy">updating now</code></div></div>
+  <a class="buy" data-buy target="_blank" rel="noopener">Buy $BOWL</a>
+</footer>
+
+<div id="boot"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const $ = (s, r = document) => r.querySelector(s);
+const CFG = window.PEPE_CONFIG || {}, qs = new URLSearchParams(location.search);
+const MINT = (qs.get('ca') || CFG.mint || '').trim();
+const CHAIN = CFG.chain || 'solana';
+const DEMO = !MINT || qs.has('demo');
+// ?shot renders a clean still: white background, fixed camera. ?yaw= (deg, 0 = facing camera), ?pitch=, ?dist=, ?ty= (look-at height), ?mc=
+const SHOT = qs.has('shot'); if (SHOT) document.documentElement.classList.add('shot');
+const BUY = CFG.buy || (MINT ? 'https://pump.fun/coin/' + MINT : 'https://pump.fun');
+const NAME = CFG.name || 'Pepe', TICKER = CFG.ticker || 'PEPE';
+
+/* ---------- the joke, in numbers ---------- */
+// Length in cm from market cap: 42 cm at $5K, 60 cm at $10K, 1.9 m at $100K, 6 m at $1M, 19 m at $10M.
+const cmFor = mc => Math.max(2, 60 * Math.sqrt(Math.max(mc, 0) / 10000));
+const CM = 0.03;                                   // scene units per cm (he is ~3.6 units tall)
+const fmtMC = n => !n ? '—' : n >= 1e9 ? '$' + (n / 1e9).toFixed(2) + 'B' : n >= 1e6 ? '$' + (n / 1e6).toFixed(2) + 'M' : n >= 1e3 ? '$' + (n / 1e3).toFixed(1) + 'K' : '$' + n.toFixed(0);
+const fmtCm = cm => cm >= 100 ? (cm / 100).toFixed(2) + ' m' : cm.toFixed(1) + ' cm';
+const fmtPrice = p => !p ? '—' : p < 0.0001 ? '$' + p.toFixed(8) : '$' + p.toPrecision(4);
+const time = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false});
+
+document.title = NAME.toUpperCase();
+$('[data-name]').textContent = NAME;
+$('[data-buy]').href = BUY; $('[data-buy]').textContent = 'Buy $' + TICKER;
+if (MINT) { const c = $('[data-ca]'); c.textContent = MINT.slice(0, 6) + '…' + MINT.slice(-6); c.onclick = () => { navigator.clipboard?.writeText(MINT); const t = c.textContent; c.textContent = 'copied'; setTimeout(() => c.textContent = t, 1200); }; }
+
+/* ---------- studio ---------- */
+const canvas = $('#gl');
+const renderer = new THREE.WebGLRenderer({canvas, antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: SHOT, alpha: SHOT});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = .82;
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+if (SHOT) { scene.background = new THREE.Color(0xffffff); renderer.toneMappingExposure = .95; } else scene.fog = new THREE.Fog(0x0e0b09, 16, 46);
+
+const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 400);
+const controls = new OrbitControls(camera, canvas);
+Object.assign(controls, {enablePan: false, enableDamping: true, dampingFactor: .06, autoRotate: true, autoRotateSpeed: .55,
+  minPolarAngle: .85, maxPolarAngle: 1.45, enableZoom: false});
+
+// Three-point lighting: a warm key from the front right, a cool fill, a hard rim behind for the silhouette.
+const key = new THREE.DirectionalLight(0xfff0dc, 2.5); key.position.set(6, 8.5, 5);
+key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 5; key.shadow.bias = -0.0015;
+Object.assign(key.shadow.camera, {left: -18, right: 18, top: 14, bottom: -8, near: .5, far: 48}); key.shadow.camera.updateProjectionMatrix();
+const fill = new THREE.DirectionalLight(0x8fa6d8, .45); fill.position.set(-7, 3.5, 4);
+const rim = new THREE.SpotLight(0xffffff, 90, 60, .55, .8, 1.6); rim.position.set(-4, 9, -11);
+scene.add(key, fill, rim, rim.target, new THREE.AmbientLight(0xffffff, .10));
+
+// Floor: dark, faintly glossy, with a pool of light under him and a shadow that lands on it.
+const floorTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 512; const g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, 512, 512);
+  const r = g.createRadialGradient(256, 256, 10, 256, 256, 250);
+  r.addColorStop(0, '#4a3b28'); r.addColorStop(.3, '#211a13'); r.addColorStop(.62, '#100c09'); r.addColorStop(1, '#000');
+  g.fillStyle = r; g.fillRect(0, 0, 512, 512);
+  return new THREE.CanvasTexture(c);
+})();
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({color: 0x120e0b, roughness: .96, metalness: 0, envMapIntensity: .04}));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+const pool = new THREE.Mesh(new THREE.CircleGeometry(13, 64), new THREE.MeshBasicMaterial({map: floorTex, transparent: true, opacity: .34, blending: THREE.AdditiveBlending, depthWrite: false}));
+pool.rotation.x = -Math.PI / 2; pool.position.y = .002; scene.add(pool);
+if (SHOT) { pool.visible = false; floor.material = new THREE.ShadowMaterial({opacity: .1}); Object.assign(controls, {autoRotate: false, enabled: false}); }
+
+const pivot = new THREE.Group(); scene.add(pivot);
+const ground = 0;
+
+/* ---------- the gentleman ---------- */
+// A tall, thin man in a brown houndstooth suit: blond bowl cut with a straight fringe, handlebar moustache, striped tie,
+// arms straight down at his sides. Built from primitives, ~3.6 units tall. Faces +z.
+const SKIN = 0xefc3a4, SKIN_D = 0xd9a685, HAIR = 0xe9c56b, HAIR_D = 0xcaa14c, SUIT = 0x8a6d4b, SUIT_D = 0x5a4530,
+      SHIRT = 0xf3ead6, SHOE = 0x3a1a14, EYE = 0x101013, PINK = 0xd3948a;
+const mat = (color, o = {}) => new THREE.MeshStandardMaterial({color, roughness: .62, metalness: .03, envMapIntensity: .4, ...o});
+// houndstooth: a small two-tone check with the classic diagonal notches, tiled tightly so it reads as tweed from a distance
+const tweedTex = (rx, ry, light = '#ad8c62', dark = '#5e4532') => {
+  const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  g.fillStyle = light; g.fillRect(0, 0, 64, 64); g.fillStyle = dark;
+  for (let y = 0; y < 64; y += 16) for (let x = 0; x < 64; x += 16) {
+    g.fillRect(x, y, 8, 8); g.fillRect(x + 8, y + 8, 8, 8);
+    g.fillRect(x + 8, y, 4, 2); g.fillRect(x + 12, y + 2, 4, 2); g.fillRect(x, y + 8, 2, 4); g.fillRect(x + 2, y + 12, 2, 4);
+  }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.colorSpace = THREE.SRGBColorSpace; return t;
+};
+// tie: claret and navy regimental stripes with a hairline of cream between them, cut on the bias
+const tieTex = (() => {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 256; const g = c.getContext('2d');
+  g.translate(32, 128); g.rotate(-.5); g.translate(-160, -160);
+  for (let y = 0; y < 320; y += 40) { g.fillStyle = '#6e1f2c'; g.fillRect(0, y, 320, 22); g.fillStyle = '#f3ead6'; g.fillRect(0, y + 22, 320, 3); g.fillStyle = '#1f2a5c'; g.fillRect(0, y + 25, 320, 12); g.fillStyle = '#f3ead6'; g.fillRect(0, y + 37, 320, 3); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
+const skin = mat(SKIN), skinD = mat(SKIN_D), hair = mat(HAIR, {roughness: .5}), hairD = mat(HAIR_D, {roughness: .55});
+// mapped materials are white so the canvas colours come through untinted
+const suit = mat(0xffffff, {map: tweedTex(7, 7), roughness: .85}), sleeve = mat(0xffffff, {map: tweedTex(10, 14), roughness: .85}), suitD = mat(SUIT_D, {roughness: .85}), trouser = mat(0xffffff, {map: tweedTex(3, 16), roughness: .85});
+const shirt = mat(SHIRT, {roughness: .7}), tie = mat(0xffffff, {map: tieTex, roughness: .5}), shoe = mat(SHOE, {roughness: .3, metalness: .05, envMapIntensity: .9});
+const eyeMat = mat(EYE, {roughness: .12, metalness: .1, envMapIntensity: 1.2}), whiteMat = mat(0xf7f2ee, {roughness: .3}), glintMat = new THREE.MeshBasicMaterial({color: 0xffffff});
+const mesh = (geo, m, x = 0, y = 0, z = 0) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = o.receiveShadow = true; return o; };
+const rig = {};   // parts we animate
+const HEAD_Y = 3.22, LID = -.3;   // lids sit low: he always looks a little unimpressed
+const buildMan = () => {
+  const p = new THREE.Group(); rig.root = p;
+  // shoes: long dark oxfords, toes forward
+  for (const s of [-1, 1]) p.add(mesh(new RoundedBoxGeometry(.24, .13, .48, 4, .06), shoe, s * .2, .065, .1));
+  // legs: long and thin, straight, in the same cloth
+  for (const s of [-1, 1]) p.add(mesh(new RoundedBoxGeometry(.3, 1.7, .32, 4, .12), trouser, s * .19, .95, 0));
+  // jacket: a narrow rounded block, slightly wider at the shoulders
+  rig.body = new THREE.Group(); rig.body.position.y = 2.25; p.add(rig.body);
+  rig.body.add(mesh(new RoundedBoxGeometry(1.06, 1.14, .6, 6, .16), suit));
+  const shoulders = mesh(new RoundedBoxGeometry(1.3, .22, .56, 4, .1), sleeve, 0, .5, 0); rig.body.add(shoulders);
+  // shirt front and collar in the V of the lapels, tie down the centre, lapels folded over it
+  rig.body.add(mesh(new THREE.BoxGeometry(.42, .5, .04), shirt, 0, .3, .29));
+  for (const s of [-1, 1]) { const c = mesh(new THREE.BoxGeometry(.12, .13, .04), shirt, s * .09, .5, .3); c.rotation.z = s * -.7; rig.body.add(c); }
+  const knot = mesh(new RoundedBoxGeometry(.13, .1, .06, 2, .03), tie, 0, .48, .32); rig.body.add(knot);
+  const tieBlade = mesh(new THREE.BoxGeometry(.14, .62, .03), tie, 0, .12, .31); rig.body.add(tieBlade);
+  for (const s of [-1, 1]) { const l = mesh(new THREE.BoxGeometry(.2, .66, .03), suitD, s * .2, .2, .31); l.rotation.z = s * .32; rig.body.add(l); }
+  // buttons, flap pockets, a hint of the hem
+  for (const y of [-.05, -.3]) rig.body.add(mesh(new THREE.SphereGeometry(.028, 10, 8), suitD, 0, y, .31));
+  for (const s of [-1, 1]) rig.body.add(mesh(new THREE.BoxGeometry(.24, .07, .03), suitD, s * .34, -.22, .31));
+  // sleeves: straight down at the sides, a long pale hand at the end of each
+  rig.arms = [];
+  for (const s of [-1, 1]) {
+    const a = new THREE.Group(); a.position.set(s * .66, 2.72, 0); p.add(a); rig.arms.push(a);
+    a.add(mesh(new THREE.CapsuleGeometry(.13, .95, 6, 14), sleeve, 0, -.55, 0));
+    a.add(mesh(new THREE.CylinderGeometry(.11, .11, .05, 14), shirt, 0, -1.06, 0));
+    const h = mesh(new THREE.CapsuleGeometry(.075, .16, 4, 10), skin, 0, -1.2, .01); a.add(h);
+  }
+  // neck, then a long narrow head
+  p.add(mesh(new THREE.CylinderGeometry(.13, .15, .3, 16), skin, 0, 2.88, 0));
+  p.add(mesh(new THREE.CylinderGeometry(.19, .21, .1, 16), shirt, 0, 2.8, 0));
+  rig.head = new THREE.Group(); rig.head.position.set(0, HEAD_Y, 0); p.add(rig.head);
+  const skull = mesh(new THREE.SphereGeometry(1, 28, 20), skin); skull.scale.set(.33, .42, .35); rig.head.add(skull);
+  const jaw = mesh(new THREE.SphereGeometry(1, 20, 14), skin, 0, -.24, .02); jaw.scale.set(.25, .2, .27); rig.head.add(jaw);
+  for (const s of [-1, 1]) { const e = mesh(new THREE.SphereGeometry(.06, 12, 8), skinD, s * .33, -.02, 0); e.scale.set(.5, 1, .8); rig.head.add(e); }
+  // the bowl cut: a wide blond cap with a straight fringe at the brow, and a curtain that hangs to the jaw on the sides and back
+  const cap = mesh(new THREE.SphereGeometry(1, 32, 16, 0, Math.PI * 2, 0, Math.PI * .52), hair, 0, .06, -.01); cap.scale.set(.5, .44, .48); rig.head.add(cap);
+  const curtain = mesh(new THREE.CylinderGeometry(.47, .52, .5, 32, 1, true, Math.PI * .28, Math.PI * 1.44), hair, 0, -.16, -.01); rig.head.add(curtain);
+  curtain.material = hair.clone(); curtain.material.side = THREE.DoubleSide;
+  const fringe = mesh(new THREE.CylinderGeometry(.5, .5, .13, 24, 1, true, -.6, 1.2), hair, 0, .04, -.01); fringe.material = curtain.material; rig.head.add(fringe);
+  // eyes: small, wet, heavy-lidded; the lids blink
+  rig.lids = [];
+  for (const s of [-1, 1]) {
+    const e = new THREE.Group(); e.position.set(s * .13, -.02, .3); rig.head.add(e);
+    e.add(mesh(new THREE.SphereGeometry(.058, 16, 12), whiteMat));
+    e.add(mesh(new THREE.SphereGeometry(.03, 12, 8), eyeMat, 0, 0, .04));
+    const g1 = new THREE.Mesh(new THREE.SphereGeometry(.01, 8, 6), glintMat); g1.position.set(.012, .014, .066); e.add(g1);
+    const lid = mesh(new THREE.SphereGeometry(.063, 16, 8, 0, Math.PI * 2, 0, Math.PI * .5), skin); lid.rotation.x = LID; e.add(lid); rig.lids.push(lid);
+  }
+  // nose, a small closed mouth, and the handlebar moustache: two tubes that run out from under the nose and curl up
+  const nose = mesh(new THREE.SphereGeometry(1, 12, 10), skin, 0, -.12, .34); nose.scale.set(.045, .07, .05); rig.head.add(nose);
+  const mouth = mesh(new THREE.CapsuleGeometry(.012, .07, 3, 8), mat(0xb87a6a, {roughness: .5}), 0, -.27, .33); mouth.rotation.z = Math.PI / 2; rig.head.add(mouth);
+  rig.stache = [];
+  for (const s of [-1, 1]) {
+    const c = new THREE.CatmullRomCurve3([new THREE.Vector3(0, -.19, .34), new THREE.Vector3(s * .08, -.205, .35), new THREE.Vector3(s * .15, -.2, .34),
+      new THREE.Vector3(s * .2, -.16, .325), new THREE.Vector3(s * .2, -.11, .315), new THREE.Vector3(s * .16, -.1, .32), new THREE.Vector3(s * .15, -.135, .325)]);
+    const m = mesh(new THREE.TubeGeometry(c, 40, .017, 8, false), hairD); rig.head.add(m); rig.stache.push(m);
+  }
+  // where the member attaches: front of the trousers, centre line, just below the jacket hem
+  rig.anchor = new THREE.Object3D(); rig.anchor.position.set(0, 1.5, .18); p.add(rig.anchor);
+  return p;
+};
+
+// The growing part: a slim tube along a curve that rises from the anchor, with a rounded tip.
+const shaft = new THREE.Mesh(new THREE.BufferGeometry(), skin);
+const tip = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 12), mat(PINK, {roughness: .45}));
+const sheath = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 10), skinD);
+for (const m of [shaft, tip, sheath]) { m.castShadow = true; m.receiveShadow = true; }
+pivot.add(shaft, tip, sheath);
+
+let shownCm = 0, targetCm = 0, ready = false;
+const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3());
+const ends = {base: new THREE.Vector3(), tip: new THREE.Vector3()}, tmp = new THREE.Vector3();
+const updateMember = t => {
+  if (!ready) return;
+  const b = pivot.worldToLocal(rig.anchor.getWorldPosition(tmp)).clone();
+  const L = shownCm * CM, r = .07 + Math.min(.16, L * .035);
+  const bounce = Math.sin(t * 8.4) * .03 * Math.min(L, 4);
+  const dir = new THREE.Vector3(0, .55, 1).normalize();     // out the front and up
+  const sag = Math.pow(L, 1.25) * .05 + bounce;
+  const end = b.clone().addScaledVector(dir, L); end.y -= sag;
+  if (end.y < ground + r) end.y = ground + r;
+  const mid = b.clone().addScaledVector(dir, L * .5); mid.y -= sag * .2;
+  curve.v0.copy(b); curve.v1.copy(mid); curve.v2.copy(end);
+  shaft.geometry.dispose();
+  shaft.geometry = new THREE.TubeGeometry(curve, Math.max(8, Math.min(56, Math.round(L * 12))), r, 14, false);
+  tip.position.copy(end); tip.scale.setScalar(r * 1.26);
+  tip.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), curve.getTangent(1)); tip.scale.y = r * 1.5;
+  sheath.position.copy(b); sheath.scale.set(r * 1.5, r * 1.3, r * 1.7);
+  ends.base.copy(b); ends.tip.copy(end);
+};
+
+// Idle: a little bob, the occasional slow blink, arms swaying at his sides, moustache twitching. No skeleton needed.
+const blinkAt = t => { if (SHOT) return 0; const c = t % 4.7; return c < .3 ? Math.sin(c / .3 * Math.PI) : 0; };
+const idle = t => {
+  if (!rig.root) return;
+  const br = Math.sin(t * 1.5);
+  rig.root.position.y = br * .015;
+  rig.body.scale.set(1 + br * .008, 1 + br * .012, 1 + br * .008);
+  rig.head.position.y = HEAD_Y + br * .02; rig.head.rotation.z = Math.sin(t * .6) * .03; rig.head.rotation.y = Math.sin(t * .4) * .06;
+  const bl = blinkAt(t); for (const l of rig.lids) l.rotation.x = LID + bl * 1.3;
+  rig.arms.forEach((a, i) => { a.rotation.x = Math.sin(t * 1.5 + i * 2) * .03; a.rotation.z = (i ? -1 : 1) * Math.sin(t * 1.1 + i) * .02; });
+  rig.stache.forEach((m, i) => { m.rotation.z = (i ? -1 : 1) * Math.sin(t * 2.3 + i) * .02; });
+};
+
+// Camera pulls back as it grows so the whole thing stays in frame.
+const frame = () => {
+  if (SHOT) {
+    const yaw = THREE.MathUtils.degToRad(+(qs.get('yaw') ?? -68)), pitch = THREE.MathUtils.degToRad(+(qs.get('pitch') ?? 14)), d = +(qs.get('dist') ?? 8.2);
+    controls.target.set(0, +(qs.get('ty') ?? 1.75), 0);
+    camera.position.set(Math.sin(yaw) * Math.cos(pitch) * d, controls.target.y + Math.sin(pitch) * d, Math.cos(yaw) * Math.cos(pitch) * d);
+    camera.lookAt(controls.target); rim.target.position.copy(controls.target); return;
+  }
+  const L = shownCm * CM, span = Math.max(7.6, 6.4 + L * 1.15);
+  const want = span / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) * (camera.aspect < 1 ? 1.2 / camera.aspect : 1) * .92;
+  const d = camera.position.distanceTo(controls.target);
+  if (Math.abs(d - want) > .05) { const v = camera.position.clone().sub(controls.target).setLength(d + (want - d) * .04); camera.position.copy(controls.target).add(v); }
+  controls.target.lerp(new THREE.Vector3(0, 1.8 + Math.min(1.2, L * .12), 0), .04);
+  rim.target.position.copy(controls.target);
+};
+
+const resize = () => { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+addEventListener('resize', resize); resize();
+
+// The measurement: a hairline drawn between the two ends in screen space, with drop lines and the figure above it.
+const svg = $('#rule'), NS = 'http://www.w3.org/2000/svg';
+const mk = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+const rl = {line: mk('line', {}), a: mk('line', {class: 'drop'}), b: mk('line', {class: 'drop'}), t: mk('text', {'text-anchor': 'middle'})};
+svg.append(rl.line, rl.a, rl.b, rl.t);
+const project = (v, out) => { out.copy(v).project(camera); return {x: (out.x + 1) / 2 * innerWidth, y: (1 - out.y) / 2 * innerHeight}; };
+const paintRule = () => {
+  if (!ready || shownCm <= 0) { svg.style.opacity = 0; return; }
+  const p0 = project(pivot.localToWorld(ends.base.clone()), new THREE.Vector3()), p1 = project(pivot.localToWorld(ends.tip.clone()), new THREE.Vector3());
+  if (Math.abs(p1.x - p0.x) < 46) { svg.style.opacity = 0; return; }
+  svg.style.opacity = .9;
+  const y = Math.min(innerHeight - 150, Math.max(p0.y, p1.y) + 64);
+  const set = (el, x1, y1, x2, y2) => { el.setAttribute('x1', x1); el.setAttribute('y1', y1); el.setAttribute('x2', x2); el.setAttribute('y2', y2); };
+  set(rl.line, p0.x, y, p1.x, y); set(rl.a, p0.x, p0.y + 10, p0.x, y); set(rl.b, p1.x, p1.y + 10, p1.x, y);
+  rl.t.setAttribute('x', (p0.x + p1.x) / 2); rl.t.setAttribute('y', y - 12); rl.t.textContent = fmtCm(shownCm);
+};
+
+const clock = new THREE.Clock(), t0 = performance.now();
+let mixer = null;
+window.__png = () => canvas.toDataURL('image/png');
+const loop = () => {
+  const dt = Math.min(clock.getDelta(), .05), t = (performance.now() - t0) / 1000;
+  if (mixer) mixer.update(dt);
+  shownCm += (targetCm - shownCm) * Math.min(1, dt * 1.8);
+  idle(t);
+  scene.updateMatrixWorld();
+  updateMember(t); frame(); controls.update();
+  renderer.render(scene, camera);
+  paintRule();
+  requestAnimationFrame(loop);
+};
+
+const begin = () => {
+  ready = true;
+  camera.position.set(9.5, 3.6, 6.5); controls.target.set(0, 1.8, 0);
+  requestAnimationFrame(loop);
+  setTimeout(() => $('#boot').classList.add('gone'), 260);
+  start();
+};
+
+/* ---------- market ---------- */
+const state = {mc: 0, best: 0, log: []};
+// DexScreener allows 300 req/min on the token endpoints, so 2 s polling is comfortable. GeckoTerminal (~30/min) is only a
+// fallback and is never asked more than once every 10 s. Polling pauses while the tab is hidden and backs off after errors.
+let geckoAt = 0, quoteAt = 0, quoteUsd = 0;
+const bestPair = a => Array.isArray(a) && a.length ? a.slice().sort((x, y) => (y.liquidity?.usd || 0) - (x.liquidity?.usd || 0))[0] : null;
+const fetchDex = async () => {
+  try {
+    const p = bestPair(await (await fetch('https://api.dexscreener.com/tokens/v1/' + CHAIN + '/' + MINT, {cache: 'no-store'})).json());
+    if (p) return {mc: +(p.marketCap || p.fdv), price: +p.priceUsd, vol: p.volume?.h24, chg: p.priceChange?.h24, src: 'live'};
+  } catch (e) {}
+  return null;
+};
+// Raydium LaunchLab pool, read straight from the chain: price = (virtualB + realB) / (virtualA - realA), in quote units.
+// Layout: 8 disc, u64 epoch, u8 authBump, u8 status, u8 decA, u8 decB, u8 migrateType, u64 supply, totalSellA, virtualA, virtualB, realA, realB ...
+const fetchPool = async () => {
+  if (!CFG.pool || !CFG.quote) return null;
+  try {
+    const r = await (await fetch(CFG.rpc || 'https://solana-rpc.publicnode.com', {method: 'POST', headers: {'content-type': 'application/json'},
+      body: JSON.stringify({jsonrpc: '2.0', id: 1, method: 'getAccountInfo', params: [CFG.pool, {encoding: 'base64', commitment: 'processed'}]})})).json();
+    const b64 = r.result?.value?.data?.[0]; if (!b64) return null;
+    const bin = atob(b64), d = new DataView(Uint8Array.from(bin, c => c.charCodeAt(0)).buffer);
+    const u = o => Number(d.getBigUint64(o, true));
+    const decA = d.getUint8(18), decB = d.getUint8(19), supply = u(21) / 10 ** decA, vA = u(37), vB = u(45), rA = u(53), rB = u(61);
+    const priceQ = ((vB + rB) / 10 ** decB) / ((vA - rA) / 10 ** decA);
+    if (Date.now() - quoteAt > 15000) {                                   // the quote token's dollar price, refreshed every 15 s
+      quoteAt = Date.now();
+      try { const q = bestPair(await (await fetch('https://api.dexscreener.com/tokens/v1/' + CHAIN + '/' + CFG.quote)).json()); if (q) quoteUsd = +q.priceUsd || quoteUsd; } catch (e) {}
+    }
+    if (!(priceQ > 0) || !quoteUsd) return null;
+    return {mc: priceQ * supply * quoteUsd, price: priceQ * quoteUsd, vol: null, chg: null, src: 'live'};
+  } catch (e) {}
+  return null;
+};
+const fetchGecko = async () => {
+  if (Date.now() - geckoAt < 10000) return null;
+  geckoAt = Date.now();
+  try {
+    const net = CHAIN === 'ethereum' ? 'eth' : CHAIN;
+    const a = (await (await fetch('https://api.geckoterminal.com/api/v2/networks/' + net + '/tokens/' + MINT)).json()).data.attributes;
+    if (+(a.market_cap_usd || a.fdv_usd) > 0) return {mc: +(a.market_cap_usd || a.fdv_usd), price: +a.price_usd, vol: +(a.volume_usd?.h24 || 0), chg: null, src: 'live'};
+  } catch (e) {}
+  return null;
+};
+// The chain is the freshest source while the token is on its launch curve; DexScreener adds volume / 24h once it has indexed.
+const fetchMarket = async () => {
+  const [dex, pool] = await Promise.all([fetchDex(), fetchPool()]);
+  if (pool) return {...pool, vol: dex?.vol ?? null, chg: dex?.chg ?? null};
+  if (dex) return dex;
+  return fetchGecko();
+};
+// ?mc=250000 previews any market cap. Before launch the figure sits at zero, and says so.
+const demoMc = Math.min(Math.max(+qs.get('mc') || 6000, 1000), 5e8);
+const PREVIEW = qs.has('mc');
+// No mint yet: the site sits at CFG.placeholderMc (default $6K) and reads as live until the CA is set.
+const fakeMarket = () => ({mc: PREVIEW ? demoMc : (+CFG.placeholderMc || 6000), price: null, vol: null, chg: null, src: PREVIEW ? 'preview' : 'live'});
+
+const pushLog = (text) => {
+  state.log.unshift({text, t: time()});
+  state.log = state.log.slice(0, 5);
+  $('#log').innerHTML = state.log.map((r, i) => `<div class="row" style="animation-delay:${i * .04}s;opacity:${1 - i * .16}"><b>${r.t}</b> &nbsp;${r.text}</div>`).join('');
+};
+
+const tick = async () => {
+  const m = (DEMO || PREVIEW) ? fakeMarket() : await fetchMarket();   // ?mc= always wins, even with a live mint
+  if (!m || !(m.mc > 0)) { $('[data-note]').textContent = MINT ? 'waiting for the first trade' : 'not launched yet'; return; }
+  const prev = state.mc; state.mc = m.mc;
+  const cm = cmFor(m.mc); targetCm = cm; if (SHOT) shownCm = cm;
+  const record = cm > state.best; state.best = Math.max(state.best, cm);
+  $('[data-len]').textContent = fmtCm(cm);
+  $('[data-inch]').textContent = (cm / 2.54).toFixed(1) + ' in';
+  $('[data-mc]').textContent = fmtMC(m.mc);
+  $('[data-price]').textContent = m.price ? fmtPrice(m.price) : DEMO && !PREVIEW ? 'updating now' : '—';
+  $('[data-src]').textContent = m.src;
+  const dot = $('.brand .dot'); dot.style.background = dot.style.boxShadow = '';
+  if (PREVIEW) { dot.style.background = '#e8b45f'; dot.style.boxShadow = '0 0 10px #e8b45f'; }
+  const ch = prev ? m.mc / prev - 1 : 0;
+  $('[data-note]').textContent = PREVIEW ? 'preview' : DEMO ? 'holding' : record && prev ? 'new high' : ch > .01 ? 'growing' : ch < -.01 ? 'receding' : 'holding';
+  const d = $('[data-delta]');
+  if (prev && Math.abs(ch) > .01) {
+    d.textContent = (ch > 0 ? '+' : '') + (ch * 100).toFixed(1) + '%';
+    d.style.color = ch > 0 ? 'var(--up)' : 'var(--down)'; d.style.borderColor = ch > 0 ? '#9fdc8a55' : '#e07a7a55';
+    d.classList.add('on'); clearTimeout(d._t); d._t = setTimeout(() => d.classList.remove('on'), 4000);
+    if (Math.abs(ch) > .06) pushLog(`${fmtCm(cmFor(prev))} → <b style="color:${ch > 0 ? 'var(--up)' : 'var(--down)'}">${fmtCm(cm)}</b>`);
+  }
+};
+const POLL = 2000;
+let fails = 0, timer = 0;
+const schedule = ms => { clearTimeout(timer); timer = setTimeout(poll, ms); };
+const poll = async () => {
+  if (document.hidden && state.mc > 0) return schedule(1000);                  // always fetch the first reading, even in a background tab
+  const before = state.mc;
+  await tick();
+  fails = state.mc === before && !(state.mc > 0) ? Math.min(fails + 1, 5) : 0;
+  schedule(POLL * (1 + fails));                                            // 2 s normally, up to 12 s while the API is failing
+};
+const start = () => {
+  if (DEMO || PREVIEW) { tick(); }
+  else { poll(); document.addEventListener('visibilitychange', () => { if (!document.hidden) schedule(0); }); }
+  pushLog(PREVIEW ? 'preview mode' : 'measurement started');
+};
+if (CFG.model) {
+  // Optional real model. Grounded and centred; the member attaches at CFG.modelAnchor.
+  new GLTFLoader().load(CFG.model, g => {
+    const root = g.scene;
+    root.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+    root.scale.setScalar(CFG.modelScale || 1);
+    pivot.add(root); root.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(root);
+    root.position.y -= box.min.y; root.position.x -= (box.min.x + box.max.x) / 2; root.position.z -= (box.min.z + box.max.z) / 2;
+    rig.anchor = new THREE.Object3D(); rig.anchor.position.fromArray(CFG.modelAnchor || [0, .9, .35]); pivot.add(rig.anchor);
+    if (g.animations?.length) { mixer = new THREE.AnimationMixer(root); mixer.clipAction(g.animations[0]).play(); }
+    begin();
+  }, undefined, () => { pivot.add(buildMan()); begin(); });
+} else {
+  pivot.add(buildMan()); begin();
+}
+</script>
+</body>
+</html>
