@@ -2,7 +2,7 @@
 """Point the site at a new mint. Usage: tools/setca.py <MINT> [buy_url]
 Checks DexScreener; if the token isn't indexed, finds its Raydium LaunchLab pool on-chain (via the mint's first
 transaction), verifies the layout, reads the quote mint, and writes mint/pool/quote into config.js."""
-import json, re, struct, sys, base64, urllib.request
+import json, re, struct, sys, base64, time, urllib.request
 
 RPCS = ['https://api.mainnet-beta.solana.com', 'https://solana-rpc.publicnode.com']
 LAUNCHLAB = 'LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj'
@@ -12,12 +12,15 @@ def get(url):
     return json.load(urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': 'bowlcut/1.0'}), timeout=15))
 def rpc(method, params):
     body = json.dumps({'jsonrpc': '2.0', 'id': 1, 'method': method, 'params': params}).encode()
-    for url in RPCS:
-        try:
-            req = urllib.request.Request(url, data=body, headers={'content-type': 'application/json', 'User-Agent': 'Mozilla/5.0'})
-            r = json.load(urllib.request.urlopen(req, timeout=20))
-            if 'result' in r: return r['result']
-        except Exception as e: err = e
+    for attempt in range(4):                                   # public RPCs rate-limit bursts: back off and try the next one
+        for url in RPCS:
+            try:
+                req = urllib.request.Request(url, data=body, headers={'content-type': 'application/json', 'User-Agent': 'Mozilla/5.0'})
+                r = json.load(urllib.request.urlopen(req, timeout=20))
+                if 'result' in r: return r['result']
+                err = r.get('error')
+            except Exception as e: err = e
+        time.sleep(1.5 * (attempt + 1))
     raise SystemExit(f'rpc {method} failed: {err}')
 def b58(b):
     n = int.from_bytes(b, 'big'); s = ''
