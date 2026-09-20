@@ -3,7 +3,7 @@ window.PEPE_CONFIG = {
   name: 'jeanis',               // brand in the top-left
   ticker: 'JEANIS',             // "Buy $JEANIS"
   chain: 'solana',              // dexscreener chain id: solana, ethereum, base, bsc ...
-  mint: '5qchf4yG2vCWpADvgTPUwHPwk7oQ91iTWtce4dsgpump',                     // contract address. Empty = placeholder market cap below
+  mint: '',                     // contract address. Empty = placeholder market cap below
   buy: '',                      // custom buy link. Empty = pump.fun/coin/<mint>
   placeholderMc: 6000,          // market cap shown while mint is empty
   // On-chain source for launchpad tokens the aggregators haven't indexed yet (Raydium LaunchLab / bonk.fun style pools).
@@ -12,7 +12,7 @@ window.PEPE_CONFIG = {
   quote: '',
   // pump.fun: the token's bonding-curve account (setca.py fills it). Read on-chain every 2 s until the curve completes,
   // then DexScreener takes over. Leave empty to skip.
-  curve: 'J5skWev6n8Kvh5ZkJMm7W5P6bucBxKkpvkUVz4fXbd2f',
+  curve: '',
   rpc: 'https://solana-rpc.publicnode.com',
   model: '',                    // optional: '/assets/man.glb' to use a real model instead of the built-in one
   modelScale: 1,                // scale for the optional glb
